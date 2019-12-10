@@ -1,0 +1,41 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "uzd": {
+      "root": "",
+      "sourceRoot": "webapp",
+      "projectType": "application",
+      "schematics": {},
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.json",
+            "styles": [
+              "src/assets/scss/global.scss",
+              "src/assets/scss/vendor.scss"
+            ]
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "uzd:build",
+            "proxyConfig": "src/proxy.conf.json"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "uzd",
+  "cli": {
+    "packageManager": "npm"
+  }
+}

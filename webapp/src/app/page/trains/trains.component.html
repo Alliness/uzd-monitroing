@@ -1,0 +1,94 @@
+<div class="form-row border rounded p-2" id="form">
+    <div class="input-group col-xl-2 p-0">
+        <div class="input-group-append">
+            <div class="input-group-text">From</div>
+        </div>
+        <input class="form-control" placeholder="yyyy-mm-dd"
+               ngbDatepicker #df="ngbDatepicker"
+               #dpFromDate
+               (dateSelect)="fromDate = $event"
+               [value]="transform(fromDate, 'yyyy-MM-dd')"
+               (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+        <button class="btn input-group-append" (click)="df.toggle()" type="button">
+            <fa-icon [icon]="calendarIcon"></fa-icon>
+        </button>
+    </div>
+    <div class="input-group col-xl-2 p-0">
+        <div class="input-group-append">
+            <div class="input-group-text">To</div>
+        </div>
+        <input class="form-control" placeholder="yyyy-mm-dd"
+               ngbDatepicker #dt="ngbDatepicker"
+               #dpToDate
+               (dateSelect)="toDate = $event"
+               [value]="transform(toDate, 'yyyy-MM-dd')"
+               (input)="toDate = validateInput(fromDate, dpToDate.value)">
+        <button class="btn input-group-append" (click)="dt.toggle()" type="button">
+            <fa-icon [icon]="calendarIcon"></fa-icon>
+        </button>
+    </div>
+
+    <div class="input-group col-xl-2 p-0">
+        <div class="input-group-append">
+            <div class="input-group-text">From</div>
+        </div>
+        <input class="form-control" type="text" placeholder="Station"
+               [ngbTypeahead]="searchStations"
+               [(ngModel)]="pickup"
+               [inputFormatter]="resultTemplate"
+               [resultFormatter]="resultTemplate"
+        >
+    </div>
+
+    <div class="input-group col-xl-2 p-0">
+        <div class="input-group-append">
+            <div class="input-group-text">To</div>
+        </div>
+        <input class="form-control" type="text" placeholder="Station"
+               [ngbTypeahead]="searchStations"
+               [(ngModel)]="dropoff"
+               [inputFormatter]="resultTemplate"
+               [resultFormatter]="resultTemplate"
+        >
+    </div>
+
+    <button class="btn btn-outline-success col-xl-1 p-0" (click)="this.searchTrains()">Search
+    </button>
+</div>
+<hr>
+<div class="table-responsive" *ngIf="trains?.length > 0">
+    <table class="table table-sm table-striped table-bordered" aria-describedby="page-heading">
+        <thead>
+        <tr>
+            <th>Train</th>
+            <th>Dispatch</th>
+            <th>Arrive</th>
+            <th>Route Time</th>
+            <th>Total Free</th>
+            <th>Wagons</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let train of trains; trackBy: freeSpaces">
+            <th>{{train.number}}</th>
+            <td class="p-1">
+                <kbd class="date-row">
+                    <span class="p-1">{{train.from.date | date: 'EEEE, dd MMMM'}}</span>
+                    <span>{{train.from.time}}</span>
+                </kbd>
+            </td>
+            <td class="p-1">
+                <kbd class="date-row">
+                    <span class="p-1">{{train.to.date | date: 'EEEE, dd MMMM'}}</span>
+                    <span>{{train.to.time}}</span>
+                </kbd>
+            </td>
+            <td>{{train.travelTime}}</td>
+            <td>{{train.totalPlaces}}</td>
+            <td>
+                <span *ngFor="let wagon of train.wagons" [className]="'btn m-1 ' + getWagonCss(wagon.wagonType)" >{{getWagonType(wagon.wagonType)}} : {{wagon.places}}</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
